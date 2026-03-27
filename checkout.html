@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Finalizar Pedido - Tejidos Yohis</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ENCABEZADO -->
+  <header>
+    <h1>Finaliza tu pedido 🧶</h1>
+  </header>
+
+  <main class="checkout">
+
+    <!-- DATOS DEL COMPRADOR -->
+    <section class="formulario">
+      <h2>Datos del comprador</h2>
+      <form id="formPedido">
+        <input type="text" id="nombre" placeholder="Tu nombre completo" required>
+        <input type="email" id="email" placeholder="Tu correo electrónico" required>
+        <input type="tel" id="telefono" placeholder="Tu número de teléfono" required>
+        <input type="text" id="direccion" placeholder="Tu dirección de entrega" required>
+        <button type="submit">Confirmar pedido</button>
+      </form>
+    </section>
+
+    <!-- RESUMEN DEL PEDIDO -->
+    <section id="resumenPedido">
+      <h2>Resumen de tu pedido</h2>
+      <ul id="resumen-pedido"></ul>
+      <p id="total-pedido"></p>
+    </section>
+
+  </main>
+
+  <!-- PIE DE PÁGINA -->
+  <footer>
+    <p>© 2025 Tejidos Yohis | Todos los derechos reservados</p>
+  </footer>
+
+  <!-- CONEXIÓN CON JAVASCRIPT -->
+  <script src="js/productos.js"></script>
+
+  <!-- SCRIPT PARA MOSTRAR RESUMEN Y ENVIAR WHATSAPP -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("✅ Página checkout.html cargada correctamente");
+
+      const carrito = JSON.parse(localStorage.getItem("carrito")) || [];
+      const resumen = document.getElementById("resumen-pedido");
+      const totalElemento = document.getElementById("total-pedido");
+      const formPedido = document.getElementById("formPedido");
+
+      // Mostrar carrito vacío si no hay productos
+      if (carrito.length === 0) {
+        resumen.innerHTML = "<p>No hay productos en tu pedido.</p>";
+        totalElemento.textContent = "Total: $0";
+        return;
+      }
+
+      // Mostrar productos y calcular total
+      let total = 0;
+      carrito.forEach(item => {
+        const li = document.createElement("li");
+        const cantidad = item.cantidad || 1;
+        li.textContent = `${item.nombre} (${cantidad}) - $${item.precio}`;
+        resumen.appendChild(li);
+
+        const precioNum = typeof item.precio === "string"
+          ? Number(item.precio.replace(/\D/g, ''))
+          : item.precio;
+
+        total += precioNum * cantidad;
+      });
+
+      totalElemento.textContent = `💰 Total: $${total.toLocaleString()}`;
+
+      // Enviar pedido por WhatsApp
+      formPedido.addEventListener("submit", (e) => {
+        e.preventDefault();
+
+        const nombre = document.getElementById("nombre").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
+        const direccion = document.getElementById("direccion").value.trim();
+
+        if (!nombre || !email || !telefono || !direccion) {
+          alert("⚠️ Por favor completa todos los campos del formulario.");
+          return;
+        }
+
+        if (carrito.length === 0) {
+          alert("⚠️ Tu carrito está vacío.");
+          return;
+        }
+
+        // Crear mensaje con saltos de línea y caracteres especiales
+        let mensaje = `🧶 Nuevo pedido - Tejidos Yohis 🧶\n`;
+        mensaje += `👤 Nombre: ${nombre}\n`;
+        mensaje += `📧 Correo: ${email}\n`;
+        mensaje += `📞 Teléfono: ${telefono}\n`;
+        mensaje += `🏠 Dirección: ${direccion}\n\n`;
+        mensaje += `🛍 Productos:\n`;
+
+        carrito.forEach(item => {
+          const cantidad = item.cantidad || 1;
+          mensaje += `- ${item.nombre} (${cantidad}) - $${item.precio}\n`;
+        });
+
+        mensaje += `\n💰 Total: $${total.toLocaleString()}\n`;
+        mensaje += `\n📦 ¡Gracias por tu compra!`;
+
+        // Número de WhatsApp Business
+        const numeroWhatsApp = "573180902991";
+
+        // Codificar mensaje correctamente
+        const url = `https://wa.me/${numeroWhatsApp}?text=${encodeURIComponent(mensaje)}`;
+
+        // Abrir WhatsApp en nueva ventana
+        window.open(url, "_blank");
+
+        // Limpiar carrito y formulario
+        localStorage.removeItem("carrito");
+        formPedido.reset();
+        resumen.innerHTML = "<p>No hay productos en tu pedido.</p>";
+        totalElemento.textContent = "Total: $0";
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+
+
