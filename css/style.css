@@ -93,13 +93,14 @@ nav a.activo {
 }
 
 .producto {
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
-  padding: 10px;
-  width: 180px;
+  width: 250px;        /* ancho de cada producto */
+  margin: 10px;
   text-align: center;
-  transition: transform 0.3s ease;
+  border: 1px solid #ccc;
+  padding: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  display: inline-block; 
 }
 
 .producto:hover {
@@ -107,16 +108,21 @@ nav a.activo {
 }
 
 .producto img {
-  width: 100%;
-  height: 150px;
-  object-fit: cover;
-  border-radius: 10px;
+  width: 100%;         /* que ocupe todo el ancho del contenedor */
+  height: 200px;       /* altura uniforme para todos */
+  object-fit: cover;   /* recorta si la proporción no coincide */
+  display: block;
+  margin-bottom: 10px;
 }
 
 .producto h3 {
-  font-size: 1rem;
-  margin: 8px 0 4px;
-  color: #3a2f25;
+  margin: 5px 0;
+
+ } 
+
+
+  .producto p {
+  margin: 5px 0;
 }
 
 .producto p {
